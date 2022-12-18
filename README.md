@@ -15,3 +15,5 @@
 ## VSporte.Task.Api
 #### Description
 Api-проект разделен на 4 части: API(web, controllers), Application(services, interfaces), Domain(models), Infrastructure(context, migrations).
+
+Перед началом работы необходимо выполнить update-database.
