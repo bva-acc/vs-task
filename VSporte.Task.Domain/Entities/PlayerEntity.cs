@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using VSporte.Task.Domain.Common;
 
 namespace VSporte.Task.API.Entities
 {
+    [Index(nameof(Name), nameof(Surname), nameof(Number), IsUnique = true)]
     public class PlayerEntity : AutoIncrement
     {
         [Required(ErrorMessage = "Поле {0} обязательно")]
