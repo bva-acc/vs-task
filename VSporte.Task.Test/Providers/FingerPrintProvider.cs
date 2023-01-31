@@ -18,7 +18,7 @@ public class FingerprintProvider
         //var text = File.ReadAllText($"Source/{name}.json");
 
         var isCorrectText = isCorrectVersion ? "correct_" : string.Empty;
-        var text = File.ReadAllText($"D:/app/vsporte-task/Fingerprint/{isCorrectText}{name}{version}.json");
+        var text = File.ReadAllText($"D:/Apps/VSporteTask/Fingerprint/{isCorrectText}{name}{version}.json");
         return JsonConvert.DeserializeObject<T[]>(text);
     }
 }

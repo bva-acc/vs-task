@@ -25,21 +25,15 @@ namespace VSporte.Task.API.Services
                 ShortName = dto.ShortName
             };
 
-            using var transaction = _context.Database.BeginTransaction();
-
             try
             {
                 await CreateAsync(entity);
                 await SaveChangesAsync();
 
-                transaction.Commit();
-
                 return entity.Id;
             }
             catch
             {
-                transaction.Rollback();
-
                 throw new WarningException("Something went wrong...");
             }
         }

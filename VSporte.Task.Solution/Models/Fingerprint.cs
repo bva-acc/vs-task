@@ -1,5 +1,3 @@
-using System;
-
 namespace VSporte.Task.Solution.Models;
 
 public class Fingerprint : ICloneable
@@ -14,6 +12,7 @@ public class Fingerprint : ICloneable
 
         fingerprint.Players = Players.Select(p => (PlayerItem)p.Clone()).ToArray();
         fingerprint.Clubs = Clubs.Select(c => (ClubItem)c.Clone()).ToArray();
+        fingerprint.PlayerClubs = PlayerClubs.Select(c => (PlayerClubItem)c.Clone()).ToArray();
 
         return fingerprint;
     }

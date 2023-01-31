@@ -33,7 +33,7 @@ public class DuplicateResolver
             // Добавляем связь игроков без клуба
             else if (uniqPlayers.Select(up => up.PlayerId).Contains(pc.PlayerId)
                 && !uniqClubs.Select(uc => uc.ClubId).Contains(pc.ClubId)
-                && !uniqPlayerClubs.ConvertAll(x => x.PlayerId).Contains(pc.PlayerId))
+                && !uniqPlayerClubs.Select(x => x.PlayerId).Contains(pc.PlayerId))
                 uniqPlayerClubs.Add(new PlayerClubItem { PlayerId = pc.PlayerId });
         }
 
@@ -67,9 +67,7 @@ public class DuplicateResolver
         var clubs = formatFingerprint.Clubs;
         var uniqClubs = new List<ClubItem>();
 
-        var dtoPlayers = new List<PlayerWithClubIdDto>();
-
-        JoinClubIdToPlayer(playerClubs, dtoPlayers, formatFingerprint.Players);
+        var dtoPlayers = JoinClubIdToPlayer(playerClubs, formatFingerprint.Players);
 
         // Создание списка игроков без дублей
         foreach (var dtoPlayer in dtoPlayers)
@@ -111,13 +109,13 @@ public class DuplicateResolver
             // Добавляем связь игроков без клуба
             else if (uniqPlayers.Select(up => up.PlayerId).Contains(pc.PlayerId)
                 && !uniqClubs.Select(uc => uc.ClubId).Contains(pc.ClubId)
-                && !uniqPlayerClubs.ConvertAll(x => x.PlayerId).Contains(pc.PlayerId))
+                && !uniqPlayerClubs.Select(x => x.PlayerId).Contains(pc.PlayerId))
                 uniqPlayerClubs.Add(new PlayerClubItem { PlayerId = pc.PlayerId });
         }
 
         return ReformatData(fingerprint, new Fingerprint
         {
-            Players = uniqPlayers.ConvertAll(up => new PlayerItem
+            Players = uniqPlayers.Select(up => new PlayerItem
             {
                 Name = up.Name,
                 Surname = up.Surname,
@@ -153,10 +151,8 @@ public class DuplicateResolver
         var clubs = formatFingerprint.Clubs;
         var uniqClubs = new List<ClubItem>();
 
-        var dtoPlayers = new List<PlayerWithClubIdDto>();
-
         // Соединение игрока с id клуба
-        JoinClubIdToPlayer(playerClubs, dtoPlayers, formatFingerprint.Players);
+        var dtoPlayers = JoinClubIdToPlayer(playerClubs, formatFingerprint.Players);
 
         // Создание списков игроков и клубов без дублей
         var dtoClubs = dtoPlayers.GroupBy(p => p.ClubId);
@@ -284,7 +280,7 @@ public class DuplicateResolver
 
         return ReformatData(fingerprint, new Fingerprint
         {
-            Players = uniqPlayers.ConvertAll(up => new PlayerItem
+            Players = uniqPlayers.Select(up => new PlayerItem
             {
                 Name = up.Name,
                 Surname = up.Surname,
@@ -326,8 +322,9 @@ public class DuplicateResolver
     }
 
     // Соединение игрока с id клуба
-    private static void JoinClubIdToPlayer(PlayerClubItem[] playerClubs, List<PlayerWithClubIdDto> dtoPlayers, PlayerItem[] players)
+    private static List<PlayerWithClubIdDto> JoinClubIdToPlayer(PlayerClubItem[] playerClubs, PlayerItem[] players)
     {
+        var dtoPlayers = new List<PlayerWithClubIdDto>();
         for (int i = 0; i < playerClubs.Length; i++)
         {
             var player = players.Where(p => p.PlayerId == playerClubs[i].PlayerId).SingleOrDefault();
@@ -342,6 +339,8 @@ public class DuplicateResolver
                     ClubId = playerClubs[i].ClubId
                 });
         }
+
+        return dtoPlayers;
     }
 
     // Возвращение данных к первоначальному виду
